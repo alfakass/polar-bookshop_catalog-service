@@ -21,6 +21,6 @@ jobs:
           cache: 'gradle'
       - name: run buld and test
         run: |
-          chmod -x ./gradlew
+          chmod -x gradlew
           ./gradlew buid
 
