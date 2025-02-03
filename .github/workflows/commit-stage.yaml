@@ -20,7 +20,5 @@ jobs:
           java-version: '23'
           cache: 'gradle'
       - name: run buld and test
-        run: |
-          chmod -x gradlew
-          ./gradlew buid
+        run: ./gradlew buid
 
