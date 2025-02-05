@@ -20,7 +20,7 @@ jobs:
           java-version: '23'
           cache: 'gradle'
       - name: Vulnerability Scanning
-        uses: actions/scan-action@v6
+        uses: anchore/scan-action@v6
         with:
           path: ${{github.workspace}}
           fail-build: true
