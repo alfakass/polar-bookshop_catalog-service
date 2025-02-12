@@ -15,7 +15,7 @@ class CatalogServiceApplicationTests {
 	@Autowired
 	private WebTestClient webTestClient;
 
-	Book expected = new Book("1234567890", "Title", "Author", 9.90);
+	Book expected = Book.of("1234567890", "Title", "Author", 9.90);
 
 	@Test
 	void contextLoads() {
