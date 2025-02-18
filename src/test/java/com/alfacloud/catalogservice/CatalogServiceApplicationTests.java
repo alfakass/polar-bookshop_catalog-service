@@ -4,13 +4,15 @@ import com.alfacloud.catalogservice.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(
 		webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
+@ActiveProfiles("integration")
 class CatalogServiceApplicationTests {
 	@Autowired
 	private WebTestClient webTestClient;
@@ -32,10 +34,10 @@ class CatalogServiceApplicationTests {
 				.isCreated()
 				.expectBody(Book.class)
 				.value(book -> {
-					assertEquals(book.author(), expected.author());
-					assertEquals(book.title(), expected.title());
-					assertEquals(book.price(), expected.price());
-					assertEquals(book.isbn(), expected.isbn());
+					assertEquals(expected.author(), book.author());
+					assertEquals(expected.title(), book.title());
+					assertEquals(expected.price(), book.price());
+					assertEquals(expected.isbn(), book.isbn());
 				});
 	}
 }
