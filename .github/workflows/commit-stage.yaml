@@ -65,7 +65,7 @@ jobs:
       - name: build image
         run: |
           chmod +x ./gradlew
+          echo ${{env.IMAGE_NAME}}:${{env.VERSION}}
           ./gradlew bootBuildImage --imageName ${{env.IMAGE_NAME}}:${{env.VERSION}}
-          docker images
-          
-          
+
+
