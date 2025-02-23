@@ -64,5 +64,6 @@ jobs:
         uses: docker/setup-docker-action@v4
       - name: build image
         run: |
+          ls -la
           chmod +x ./gradlew
           ./gradlew bootBuildImage --imageName ${{env.REGISTRY}}/${{env.IMAGE_NAME}}:${{env.VERSION}}
