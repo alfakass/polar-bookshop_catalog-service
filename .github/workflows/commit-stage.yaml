@@ -4,17 +4,17 @@ on:
   push:
 
 env:
-  - REGISTRY: ghcr.io
-  - IMAGE_NAME: ${{github.actor}}/catalog-service
-  - VERSION: latest
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{github.actor}}/catalog-service
+  VERSION: latest
 
 jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
     permissions:
-    contents: read
-    security-events: write
+      contents: read
+      security-events: write
     steps:
       - name: checkout source code
         uses: actions/checkout@v4
@@ -30,9 +30,9 @@ jobs:
         uses: anchore/scan-action@v6
         id: scan
         with:
-        path: ${{github.workspace}}
-        fail-build: true
-        severity-cutoff: critical
+          path: ${{github.workspace}}
+          fail-build: true
+          severity-cutoff: critical
       - name: Inspect action SARIF report
         run: cat ${{ steps.scan.outputs.sarif }}
       - name: Upload Anchore SARIF Report
@@ -66,5 +66,6 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew bootBuildImage --imageName ${{env.IMAGE_NAME}}:${{env.VERSION}}
-
-
+          docker images
+          
+          
