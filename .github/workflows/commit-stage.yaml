@@ -3,13 +3,18 @@ name: Commit Stage
 on:
   push:
 
+env:
+  - REGISTRY: ghcr.io
+  - IMAGE_NAME: ${{github.actor}}/catalog-service
+  - VERSION: latest
+
 jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      security-events: write
+    contents: read
+    security-events: write
     steps:
       - name: checkout source code
         uses: actions/checkout@v4
@@ -25,9 +30,9 @@ jobs:
         uses: anchore/scan-action@v6
         id: scan
         with:
-          path: ${{github.workspace}}
-          fail-build: true
-          severity-cutoff: critical
+        path: ${{github.workspace}}
+        fail-build: true
+        severity-cutoff: critical
       - name: Inspect action SARIF report
         run: cat ${{ steps.scan.outputs.sarif }}
       - name: Upload Anchore SARIF Report
@@ -37,5 +42,29 @@ jobs:
       - name: Build with unit and integration tests
         run: |
           chmod +x gradlew
-          ./gradlew build 
+          ./gradlew build
+  package-and-publish:
+    name: Package App and Publish
+    if: ${{github.ref =='refs/heads/main'}}
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    needs: ["build"]
+    steps:
+      - name: checkout source code
+        uses: actions/checkout@v4
+      - name: set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '23'
+          cache: 'gradle'
+      - name: set up Docker
+        uses: docker/setup-docker-action@v4
+      - name: build image
+        run: |
+          chmod +x ./gradlew
+          ./gradlew bootBuildImage --imageName ${{env.IMAGE_NAME}}:${{env.VERSION}}
+
 
