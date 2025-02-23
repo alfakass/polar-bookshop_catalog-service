@@ -36,5 +36,5 @@ server:
 
 polar:
   greeting: Hello World!!!
-  enable-test-data: true
+  enable-test-data: false
 

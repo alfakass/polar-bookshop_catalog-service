@@ -1,0 +1,24 @@
+docker rm -fv polar-postgres && docker run -d \
+ --name polar-postgres \
+  --net catalog-network \
+ -e POSTGRES_USER=user \
+ -e POSTGRES_PASSWORD=password \
+ -e POSTGRES_DB=polardb_catalog \
+ -p 5432:5432 postgres:14.4
+
+ docker rm -fv catalog-service && docker run -d \
+  --name catalog-service \
+  --net catalog-network \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://polar-postgres:5432/polardb_catalog \
+  -e POLAR_ENABLE_TEST_DATA=true \
+  -p 9090:9090 catalog-service:latest \
+  --net catalog-network
+
+  ./gradlew bootBuildImage \
+   --imageName ghcr.io/<your_github_username>/catalog-service \
+   --publishImage \
+   -PregistryUrl=ghcr.io \
+   -PregistryUsername=<your_github_username> \
+   -PregistryToken=<your_github_token>
+
+   docker-compose up -d
