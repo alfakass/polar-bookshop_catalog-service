@@ -49,10 +49,11 @@ dependencyManagement {
 	}
 }
 
-bootBuildImage {
-	imageName = "${project.name}"
-	environment = ["BP_JVM_VERSION": "23.*"]
-}
+//bootBuildImage {
+//	imageName = "${project.name}"
+//	environment = ["BP_JVM_VERSION": "23.*"]
+//	builder = "paketobuildpacks/builder:tiny"
+//}
 
 configurations {
 	compileOnly{

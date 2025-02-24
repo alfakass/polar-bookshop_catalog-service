@@ -63,10 +63,6 @@ jobs:
           cache: 'gradle'
       - name: set up Docker
         uses: docker/setup-docker-action@v4
-      - name: Set Swap Space
-        uses: pierotofy/set-swap-space@master
-        with:
-          swap-size-gb: 10
       - name: build image
         run: |
           chmod +x ./gradlew
