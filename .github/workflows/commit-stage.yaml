@@ -16,8 +16,6 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - name: echo runner
-        run: echo ${{ runner }}
       - name: checkout source code
         uses: actions/checkout@v4
       - name: set up Java
@@ -26,6 +24,10 @@ jobs:
           distribution: 'oracle'
           java-version: '23'
           cache: 'gradle'
+      - name: Build, Run Unit and Integration Tets
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
       - name: Vulnerability Scanning
         uses: anchore/scan-action@v6
         id: scan
