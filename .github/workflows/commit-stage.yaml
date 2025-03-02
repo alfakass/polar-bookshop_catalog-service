@@ -35,6 +35,7 @@ jobs:
           severity-cutoff: critical
       - name: Upload Anchore SARIF Report
         uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
         with:
           sarif_file: ${{ steps.scan.outputs.sarif }}
       - name: Build with unit and integration tests
@@ -51,8 +52,6 @@ jobs:
     runs-on: ubuntu-22.04
     needs: ["build"]
     steps:
-      - name: echo runner
-        run: echo ${{ runner }}
       - name: checkout source code
         uses: actions/checkout@v4
       - name: set up Java
@@ -73,6 +72,7 @@ jobs:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           fail-build: false
           severity-cutoff: critical
+          acs-report-enable: true
       - name: upload Anchore scan SARIF report
         uses: github/codeql-action/upload-sarif@v3
         with:
@@ -83,3 +83,5 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish container image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
