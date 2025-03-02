@@ -11,7 +11,7 @@ env:
 jobs:
   build:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       contents: read
       security-events: write
@@ -24,8 +24,8 @@ jobs:
           distribution: 'oracle'
           java-version: '23'
           cache: 'gradle'
-      - name: set up Docker
-        uses: docker/setup-docker-action@v4
+#      - name: set up Docker
+#        uses: docker/setup-docker-action@v4
       - name: Vulnerability Scanning
         uses: anchore/scan-action@v6
         id: scan
@@ -48,7 +48,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: ["build"]
     steps:
       - name: checkout source code
@@ -59,8 +59,8 @@ jobs:
           distribution: 'oracle'
           java-version: '23'
           cache: 'gradle'
-      - name: set up Docker
-        uses: docker/setup-docker-action@v4
+#      - name: set up Docker
+#        uses: docker/setup-docker-action@v4
       - name: build image
         run: |
           chmod +x ./gradlew

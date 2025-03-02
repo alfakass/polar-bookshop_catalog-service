@@ -50,14 +50,9 @@ dependencyManagement {
 }
 
 bootBuildImage {
+	builder = "docker.io/paketobuildpacks/builder-jammy-base"
 	imageName = "${project.name}"
-	environment = [
-			"BP_JVM_VERSION": "23",
-			"BP_NATIVE_IMAGE": "false",
-			"BP_JVM_TYPE": "JDK"
-	]
-	builder = "paketobuildpacks/builder:base"
-	pullPolicy = "IF_NOT_PRESENT"
+	environment = ["BP_JVM_VERSION": "23"]
 }
 
 configurations {
