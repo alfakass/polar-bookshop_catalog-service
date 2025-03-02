@@ -51,7 +51,13 @@ dependencyManagement {
 
 bootBuildImage {
 	imageName = "${project.name}"
-	environment = ["BP_JVM_VERSION": "23"]
+	environment = [
+			"BP_JVM_VERSION": "23",
+			"BP_NATIVE_IMAGE": "false",
+			"BP_JVM_TYPE": "JDK"
+	]
+	builder = "paketobuildpacks/builder:base"
+	pullPolicy = "IF_NOT_PRESENT"
 }
 
 configurations {
