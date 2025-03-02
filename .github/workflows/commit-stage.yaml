@@ -16,6 +16,8 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - name: echo runner
+        run: ${{ runner }}
       - name: checkout source code
         uses: actions/checkout@v4
       - name: set up Java
@@ -24,8 +26,6 @@ jobs:
           distribution: 'oracle'
           java-version: '23'
           cache: 'gradle'
-#      - name: set up Docker
-#        uses: docker/setup-docker-action@v4
       - name: Vulnerability Scanning
         uses: anchore/scan-action@v6
         id: scan
@@ -51,6 +51,8 @@ jobs:
     runs-on: ubuntu-22.04
     needs: ["build"]
     steps:
+      - name: echo runner
+        run: ${{ runner }}
       - name: checkout source code
         uses: actions/checkout@v4
       - name: set up Java
@@ -59,9 +61,25 @@ jobs:
           distribution: 'oracle'
           java-version: '23'
           cache: 'gradle'
-#      - name: set up Docker
-#        uses: docker/setup-docker-action@v4
       - name: build image
         run: |
           chmod +x ./gradlew
           ./gradlew bootBuildImage --imageName ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+      - name: Scan image
+        uses: anchore/scan-action@v6
+        if: success() || failure()
+        id: scan
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          fail-build: false
+          severity-cutoff: critical
+      - name: upload Anchore scan SARIF report
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
