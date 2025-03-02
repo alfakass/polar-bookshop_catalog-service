@@ -47,8 +47,9 @@ jobs:
     name: Package App and Publish
     if: ${{ github.ref =='refs/heads/main' }}
     permissions:
-      contents: write
+      contents: read
       packages: write
+      security-events: write
     runs-on: ubuntu-22.04
     needs: ["build"]
     steps:
